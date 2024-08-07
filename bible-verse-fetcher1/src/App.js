@@ -10,13 +10,16 @@ const versionMap = {
   nkjv: 'NKJV',
   'new king james version': 'NKJV',
   msg: 'MSG',
-  'MESSENGER': 'MSG',
+  'messenger': 'MSG',
   amp: 'AMP',
   'amplified version': 'AMP',
+  'amplified bible': 'AMP',
   esv: 'ESV',
   'english standard version': 'ESV',
   cev: 'CEV',
   'common english version': 'CEV',
+  nlt: 'NLT',
+  'new living translation': 'NLT',
 };
 
 const localData = {
@@ -27,6 +30,7 @@ const localData = {
   AMP: '/data/amp.json',
   ESV: '/data/esv.json',
   CEV: '/data/cev.json',
+  NLT: '/data/nlt.json',
 };
 
 const fullNames = {
@@ -37,6 +41,7 @@ const fullNames = {
   amp: 'Amplified Bible',
   esv: 'English Standard Version',
   cev: 'Common English Version',
+  nlt: 'New Living Translation',
 };
 
 const bookNameMap = {
@@ -108,6 +113,66 @@ const bookNameMap = {
   Revelation: 65,
 };
 
+const bookNameVariations = {
+  Psalm: 'Psalms',
+  Pslams: 'Psalms',
+  Song: 'Song of Songs',
+  SongOfSongs: 'Song of Songs',
+  Songs: 'Song of Songs',
+  '1Sam': '1 Samuel',
+  '2Sam': '2 Samuel',
+  '1Kgs': '1 Kings',
+  '2Kgs': '2 Kings',
+  '1Chr': '1 Chronicles',
+  '2Chr': '2 Chronicles',
+  Isa: 'Isaiah',
+  Jer: 'Jeremiah',
+  Lam: 'Lamentations',
+  Eze: 'Ezekiel',
+  Dan: 'Daniel',
+  Hos: 'Hosea',
+  Joe: 'Joel',
+  Amo: 'Amos',
+  Oba: 'Obadiah',
+  Jon: 'Jonah',
+  Mic: 'Micah',
+  Nah: 'Nahum',
+  Hab: 'Habakkuk',
+  Zep: 'Zephaniah',
+  Hag: 'Haggai',
+  Zec: 'Zechariah',
+  Mal: 'Malachi',
+  Mat: 'Matthew',
+  Mathew: 'Matthew',
+  Matt: 'Matthew',
+  Mar: 'Mark',
+  Luk: 'Luke',
+  Joh: 'John',
+  Act: 'Acts',
+  Rom: 'Romans',
+  '1Cor': '1 Corinthians',
+  '2Cor': '2 Corinthians',
+  Gal: 'Galatians',
+  Eph: 'Ephesians',
+  Phi: 'Philippians',
+  Col: 'Colossians',
+  '1The': '1 Thessalonians',
+  '2The': '2 Thessalonians',
+  '1Tim': '1 Timothy',
+  '2Tim': '2 Timothy',
+  Tit: 'Titus',
+  Phm: 'Philemon',
+  Heb: 'Hebrews',
+  Jam: 'James',
+  '1Pet': '1 Peter',
+  '2Pet': '2 Peter',
+  '1Joh': '1 John',
+  '2Joh': '2 John',
+  '3Joh': '3 John',
+  Jud: 'Jude',
+  Rev: 'Revelation',
+};
+
 function App() {
   const [verses, setVerses] = useState([]);
   const [error, setError] = useState('');
@@ -121,7 +186,7 @@ function App() {
     setCopiedVerses(new Set());
     const input = document.getElementById('verse-input').value;
     const references = input.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-    setVerses([]);
+    let allVerses = [];
     setError('');
 
     for (const reference of references) {
@@ -133,8 +198,10 @@ function App() {
         continue;
       }
 
-      if (!version) {
-        setError(prevError => prevError + `Unsupported version: ${versionInput}\n`);
+      const normalizedBook = bookNameVariations[book] || book;
+
+      if (!bookNameMap.hasOwnProperty(normalizedBook)) {
+        setError(prevError => prevError + `Invalid book name: ${book}\n`);
         continue;
       }
 
@@ -142,19 +209,20 @@ function App() {
         const url = localData[version];
         const response = await axios.get(url);
         const data = response.data;
-        const verses = getVersesFromJson(data, book, chapterAndVerse, version);
-        
+        const verses = getVersesFromJson(data, normalizedBook, chapterAndVerse, version);
+
         if (!verses || verses.length === 0) {
           setError(prevError => prevError + `Verse not found or an error occurred with ${version}.\n`);
           continue;
         }
-        
-        setVerses(prevVerses => [...prevVerses, { reference, verses }]);
+
+        allVerses = [...allVerses, { reference, verses }];
       } catch (err) {
         setError(prevError => prevError + `Error fetching verse: ${reference}\n`);
       }
     }
 
+    setVerses(allVerses);
     setLoading(false);
   };
 
@@ -165,7 +233,7 @@ function App() {
   };
 
   const parseInput = (input) => {
-    const parts = input.match(/^(.+)\s(\d+(?::|\s?vs\s?)\d+-?\d*)\s?(.*)$/i);
+    const parts = input.match(/^(.+?)\s(\d+(?::|\s?vs\s?)\d+-?\d*)\s?(.*)$/i);
     return parts ? [parts[1], parts[2].replace(/vs\s?/i, ':'), parts[3]] : [null, null, null];
   };
 
@@ -178,25 +246,51 @@ function App() {
       return null;
     }
 
-    const bookData = data.bible.b[bookIndex];
-    if (!bookData) {
+    if (data.bible) {
+      // Old schema
+      const bookData = data.bible.b[bookIndex];
+      if (!bookData) {
+        return null;
+      }
+
+      const chapterData = bookData.c[parseInt(chapter) - 1];
+      if (!chapterData) {
+        return null;
+      }
+
+      const verses = chapterData.v.slice(startVerse - 1, endVerse);
+      return verses.map((text, index) => ({
+        chapter: parseInt(chapter),
+        verse: startVerse + index,
+        text,
+        book,
+        version,
+        isFirstVerse: index === 0
+      }));
+    } else if (data.XMLBIBLE) {
+      // New schema
+      const bookData = data.XMLBIBLE.BIBLEBOOK[bookIndex];
+      if (!bookData) {
+        return null;
+      }
+
+      const chapterData = bookData.CHAPTER[parseInt(chapter) - 1];
+      if (!chapterData) {
+        return null;
+      }
+
+      const verses = chapterData.VERS.slice(startVerse - 1, endVerse);
+      return verses.map((text, index) => ({
+        chapter: parseInt(chapter),
+        verse: startVerse + index,
+        text,
+        book,
+        version,
+        isFirstVerse: index === 0
+      }));
+    } else {
       return null;
     }
-
-    const chapterData = bookData.c[parseInt(chapter) - 1];
-    if (!chapterData) {
-      return null;
-    }
-
-    const verses = chapterData.v.slice(startVerse - 1, endVerse);
-    return verses.map((text, index) => ({
-      chapter: parseInt(chapter),
-      verse: startVerse + index,
-      text,
-      book,
-      version,
-      isFirstVerse: index === 0
-    }));
   };
 
   const splitText = (text, maxLength) => {
@@ -229,7 +323,7 @@ function App() {
       : `${verse.verse} ${verse.text}`;
 
     const chunks = splitText(text, 200);
-    
+
     return (
       <div key={index} className="verse-chunk-container">
         {chunks.map((chunk, chunkIndex) => (
@@ -248,14 +342,14 @@ function App() {
   };
 
   const getVerseChunksCount = () => {
-    let totalChunks = 0;
+    let totalButtons = 0;
     verses.forEach(verseGroup => {
       verseGroup.verses.forEach(verse => {
         const chunks = splitText(verse.text, 200);
-        totalChunks += chunks.length;
+        totalButtons += chunks.length;
       });
     });
-    return totalChunks;
+    return totalButtons;
   };
 
   return (
@@ -299,4 +393,3 @@ function App() {
 }
 
 export default App;
-
