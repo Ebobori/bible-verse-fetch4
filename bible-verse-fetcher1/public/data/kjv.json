@@ -1,0 +1,28 @@
+{
+  "bible": {
+    "b": [
+      {
+        "n": "Genesis",
+        "c": [
+          {
+            "v": [
+              "In the beginning God created the heaven and the earth.",
+              "And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters."
+            ]
+          }
+        ]
+      },
+      {
+        "n": "Hebrews",
+        "c": [
+          {
+            "v": [
+              "Now faith is the substance of things hoped for, the evidence of things not seen.",
+              "For by it the elders obtained a good report."
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

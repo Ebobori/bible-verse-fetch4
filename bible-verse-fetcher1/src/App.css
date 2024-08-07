@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  margin: 20px;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+h1 {
+  color: #0066cc;
+}
+
+label {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+small {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.8em;
+  color: #555;
+  width: 100%;
+  white-space: normal;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+#output {
+  margin-top: 20px;
+}
+
+textarea {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 10px;
+  margin: 5px 0;
+}
+
+button[type="submit"] {
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #004999;
+}
+
+.clear-button {
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.clear-button:hover {
+  background-color: darkred;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.translation-select {
+  align-self: flex-end;
+  margin-bottom: 10px;
+}
+
+.translation-select select {
+  padding: 10px;
+  font-size: 16px;
+  margin-top: 5px;
+}
+
+.verse-count {
+  margin-left: auto;
+  padding-left: 20px;
+  font-size: 16px;
+  align-self: center;
+}
+
+.verse-chunk-container {
+  width: 400px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-sizing: border-box;
+  position: relative;
+  background-color: #fff;
+  margin-bottom: 10px;
+}
+
+.verse-chunk {
+  margin-bottom: 10px;
+  padding-bottom: 20px;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.copy-button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+.copy-button.copied {
+  background: #0066cc;
+}
+
+.error {
+  color: red;
+}
+
+.spinner {
+  border: 16px solid #f3f3f3;
+  border-top: 16px solid #3498db;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.verse-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
