@@ -64,7 +64,7 @@ export const versionMap = {
     ESV: '/data/esv.json',
     CEV: '/data/cev.json',
     NLT: '/data/nlt.json',
-    TPT: '/data/tpt.json',
+    TPT: '/data/modified_tpt.json',
     YLT: '/data/ylt.json',
     NRSV: '/data/eng_nrsv.json',
     NIRV: '/data/nirv.json',
