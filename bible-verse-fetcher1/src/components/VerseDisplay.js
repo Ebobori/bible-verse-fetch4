@@ -1,7 +1,7 @@
 import React from 'react';
 import { splitText } from '../utils/bibleUtils';
 
-const VerseDisplay = ({ verses, handleCopyClick }) => {
+const VerseDisplay = ({ verses, handleCopyClick, copiedVerses }) => {
   const createVerseBanner = (verse, index) => {
     const text = verse.isFirstVerse
       ? `${verse.book} ${verse.chapter}:${verse.verse} ${verse.version} ${verse.text}`
@@ -15,10 +15,10 @@ const VerseDisplay = ({ verses, handleCopyClick }) => {
           <div key={chunkIndex} className="verse-chunk">
             <span>{chunk}</span>
             <button
-              className={`copy-button ${verse.copied ? 'copied' : ''}`}
+              className={`copy-button ${copiedVerses.has(chunk) ? 'copied' : ''}`}
               onClick={() => handleCopyClick(chunk)}
             >
-              {verse.copied ? 'Copied' : 'Copy'}
+              {copiedVerses.has(chunk) ? 'Copied' : 'Copy'}
             </button>
           </div>
         ))}
