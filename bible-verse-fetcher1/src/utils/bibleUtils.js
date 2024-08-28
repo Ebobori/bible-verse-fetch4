@@ -1,5 +1,3 @@
-// src/utils/bibleUtils.js
-
 export const versionMap = {
     kjv: 'KJV',
     'king james version': 'KJV',
@@ -300,4 +298,5 @@ export const versionMap = {
     }
     return result;
   };
+  
   

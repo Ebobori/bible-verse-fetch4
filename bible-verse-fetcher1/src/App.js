@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
@@ -6,6 +5,7 @@ import TranslationSelect from './components/TranslationSelect';
 import VerseInput from './components/VerseInput';
 import VerseDisplay from './components/VerseDisplay';
 import { versionMap, fullNames, localData, bookNameMap, bookNameVariations, parseInput, getVersesFromJson, splitText } from './utils/bibleUtils';
+
 
 function App() {
   const [verses, setVerses] = useState([]);
@@ -73,7 +73,12 @@ function App() {
     textarea.select();
     document.execCommand('copy');
     document.body.removeChild(textarea);
-    setCopiedVerses(new Set([...copiedVerses, chunk]));
+
+    setCopiedVerses(prevCopied => {
+      const newCopied = new Set(prevCopied);
+      newCopied.add(chunk);
+      return newCopied;
+    });
   };
 
   const getVerseChunksCount = () => {
@@ -103,7 +108,7 @@ function App() {
       />
       {loading && <div className="spinner"></div>}
       {error && <div className="error">{error}</div>}
-      <VerseDisplay verses={verses} handleCopyClick={handleCopyClick} />
+      <VerseDisplay verses={verses} handleCopyClick={handleCopyClick} copiedVerses={copiedVerses} />
     </div>
   );
 }
