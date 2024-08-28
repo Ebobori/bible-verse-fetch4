@@ -189,3 +189,33 @@ button[type="submit"]:hover {
   margin-top: 20px;
 }
 
+/* App.css */
+
+/* Save Button */
+.save-button {
+  background-color: #0066cc; /* Blue color */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px; /* Space between Save and Cancel buttons */
+  border-radius: 4px;
+}
+
+.save-button:hover {
+  background-color: #004999; /* Darker blue on hover */
+}
+
+/* Cancel Button */
+.cancel-button {
+  background-color: #ccc; /* Grey color */
+  color: black;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.cancel-button:hover {
+  background-color: #999; /* Darker grey on hover */
+}
