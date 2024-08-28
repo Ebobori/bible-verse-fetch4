@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
-// import TranslationSelect from '.components/TranslationSelect';
 import VerseInput from './components/VerseInput';
 import VerseDisplay from './components/VerseDisplay';
-import SettingsModal from './components/SettingsModal'; // Import the new SettingsModal component
+import SettingsModal from './components/SettingsModal';
 import { versionMap, localData, bookNameMap, bookNameVariations, parseInput, getVersesFromJson, splitText } from './utils/bibleUtils';
 
 function App() {
@@ -13,16 +12,21 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [copiedVerses, setCopiedVerses] = useState(new Set());
   const [defaultTranslation, setDefaultTranslation] = useState('NKJV');
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false); // State to control modal visibility
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [chunkLimit, setChunkLimit] = useState(200);
 
   const toggleSettingsModal = () => {
-    setIsSettingsOpen(!isSettingsOpen); // Toggle the modal visibility
+    setIsSettingsOpen(!isSettingsOpen);
+  };
+
+  const saveSettings = (newChunkLimit) => {
+    setChunkLimit(newChunkLimit);
   };
 
   const fetchAndDisplayVerses = async (event) => {
     event.preventDefault();
     setLoading(true);
-    setCopiedVerses(new Set());
+    setCopiedVerses(new Set()); // Reset copiedVerses when fetching new verses
     const input = document.getElementById('verse-input').value;
     const references = input.split('\n').map(line => line.trim()).filter(line => line.length > 0);
     let allVerses = [];
@@ -68,7 +72,7 @@ function App() {
   const clearInput = () => {
     document.getElementById('verse-input').value = '';
     setVerses([]);
-    setCopiedVerses(new Set());
+    setCopiedVerses(new Set()); // Clear copiedVerses when input is cleared
   };
 
   const handleCopyClick = (chunk) => {
@@ -90,7 +94,7 @@ function App() {
     let totalButtons = 0;
     verses.forEach(verseGroup => {
       verseGroup.verses.forEach(verse => {
-        const chunks = splitText(verse.text, 200);
+        const chunks = splitText(verse.text, chunkLimit);
         totalButtons += chunks.length;
       });
     });
@@ -101,13 +105,14 @@ function App() {
     <div className="App">
       <div className="header">
         <h1>Bible Verse Fetcher</h1>
-        <button onClick={toggleSettingsModal}>Settings</button> {/* Settings Button */}
+        <button onClick={toggleSettingsModal}>Settings</button>
       </div>
-      {/* Render the SettingsModal if isSettingsOpen is true */}
       {isSettingsOpen && (
         <SettingsModal 
           defaultTranslation={defaultTranslation}
           setDefaultTranslation={setDefaultTranslation}
+          initialChunkLimit={chunkLimit}
+          saveSettings={saveSettings}
           closeModal={toggleSettingsModal}
         />
       )}
@@ -118,7 +123,12 @@ function App() {
       />
       {loading && <div className="spinner"></div>}
       {error && <div className="error">{error}</div>}
-      <VerseDisplay verses={verses} handleCopyClick={handleCopyClick} copiedVerses={copiedVerses} />
+      <VerseDisplay
+        verses={verses}
+        handleCopyClick={handleCopyClick}
+        copiedVerses={copiedVerses} // Pass copiedVerses to VerseDisplay
+        chunkLimit={chunkLimit} // Pass chunkLimit as well
+      />
     </div>
   );
 }
