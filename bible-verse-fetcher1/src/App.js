@@ -4,7 +4,7 @@ import './App.css';
 import TranslationSelect from './components/TranslationSelect';
 import VerseInput from './components/VerseInput';
 import VerseDisplay from './components/VerseDisplay';
-import { versionMap, fullNames, localData, bookNameMap, bookNameVariations, parseInput, getVersesFromJson, splitText } from './utils/bibleUtils';
+import { versionMap, localData, bookNameMap, bookNameVariations, parseInput, getVersesFromJson, splitText } from './utils/bibleUtils';
 
 
 function App() {
