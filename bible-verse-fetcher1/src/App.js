@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
-import TranslationSelect from './components/TranslationSelect';
+// import TranslationSelect from '.components/TranslationSelect';
 import VerseInput from './components/VerseInput';
 import VerseDisplay from './components/VerseDisplay';
+import SettingsModal from './components/SettingsModal'; // Import the new SettingsModal component
 import { versionMap, localData, bookNameMap, bookNameVariations, parseInput, getVersesFromJson, splitText } from './utils/bibleUtils';
-
 
 function App() {
   const [verses, setVerses] = useState([]);
@@ -13,6 +13,11 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [copiedVerses, setCopiedVerses] = useState(new Set());
   const [defaultTranslation, setDefaultTranslation] = useState('NKJV');
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false); // State to control modal visibility
+
+  const toggleSettingsModal = () => {
+    setIsSettingsOpen(!isSettingsOpen); // Toggle the modal visibility
+  };
 
   const fetchAndDisplayVerses = async (event) => {
     event.preventDefault();
@@ -96,11 +101,16 @@ function App() {
     <div className="App">
       <div className="header">
         <h1>Bible Verse Fetcher</h1>
-        <TranslationSelect
+        <button onClick={toggleSettingsModal}>Settings</button> {/* Settings Button */}
+      </div>
+      {/* Render the SettingsModal if isSettingsOpen is true */}
+      {isSettingsOpen && (
+        <SettingsModal 
           defaultTranslation={defaultTranslation}
           setDefaultTranslation={setDefaultTranslation}
+          closeModal={toggleSettingsModal}
         />
-      </div>
+      )}
       <VerseInput
         fetchAndDisplayVerses={fetchAndDisplayVerses}
         clearInput={clearInput}
