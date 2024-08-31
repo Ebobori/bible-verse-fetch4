@@ -4,16 +4,20 @@ import './App.css';
 import VerseInput from './components/VerseInput';
 import VerseDisplay from './components/VerseDisplay';
 import SettingsModal from './components/SettingsModal';
+import TextFetcher from './components/TextFetcher';
 import { versionMap, localData, bookNameMap, bookNameVariations, parseInput, getVersesFromJson, splitText } from './utils/bibleUtils';
 
 function App() {
   const [verses, setVerses] = useState([]);
+  const [chunks, setChunks] = useState([]); // State for text fetcher chunks
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [copiedVerses, setCopiedVerses] = useState(new Set());
+  const [copiedChunks, setCopiedChunks] = useState(new Set()); // State for copied text fetcher chunks
   const [defaultTranslation, setDefaultTranslation] = useState('NKJV');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [chunkLimit, setChunkLimit] = useState(200);
+  const [activeTab, setActiveTab] = useState('bible'); // State to manage active tab
 
   const toggleSettingsModal = () => {
     setIsSettingsOpen(!isSettingsOpen);
@@ -26,7 +30,7 @@ function App() {
   const fetchAndDisplayVerses = async (event) => {
     event.preventDefault();
     setLoading(true);
-    setCopiedVerses(new Set()); // Reset copiedVerses when fetching new verses
+    setCopiedVerses(new Set());
     const input = document.getElementById('verse-input').value;
     const references = input.split('\n').map(line => line.trim()).filter(line => line.length > 0);
     let allVerses = [];
@@ -72,7 +76,7 @@ function App() {
   const clearInput = () => {
     document.getElementById('verse-input').value = '';
     setVerses([]);
-    setCopiedVerses(new Set()); // Clear copiedVerses when input is cleared
+    setCopiedVerses(new Set());
   };
 
   const handleCopyClick = (chunk) => {
@@ -90,6 +94,26 @@ function App() {
     });
   };
 
+  const handleCopyChunkClick = (chunk) => {
+    const textarea = document.createElement('textarea');
+    textarea.value = chunk;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+
+    setCopiedChunks(prevCopied => {
+      const newCopied = new Set(prevCopied);
+      newCopied.add(chunk);
+      return newCopied;
+    });
+  };
+
+  const handleFetchChunks = (inputText) => {
+    const chunkedText = splitText(inputText, chunkLimit);
+    setChunks(chunkedText);
+  };
+
   const getVerseChunksCount = () => {
     let totalButtons = 0;
     verses.forEach(verseGroup => {
@@ -104,7 +128,7 @@ function App() {
   return (
     <div className="App">
       <div className="header">
-        <h1>Bible Verse Fetcher</h1>
+        <h1>Bible Verse & Text Fetcher</h1>
         <button onClick={toggleSettingsModal}>Settings</button>
       </div>
       {isSettingsOpen && (
@@ -116,19 +140,49 @@ function App() {
           closeModal={toggleSettingsModal}
         />
       )}
-      <VerseInput
-        fetchAndDisplayVerses={fetchAndDisplayVerses}
-        clearInput={clearInput}
-        getVerseChunksCount={getVerseChunksCount}
-      />
-      {loading && <div className="spinner"></div>}
-      {error && <div className="error">{error}</div>}
-      <VerseDisplay
-        verses={verses}
-        handleCopyClick={handleCopyClick}
-        copiedVerses={copiedVerses} // Pass copiedVerses to VerseDisplay
-        chunkLimit={chunkLimit} // Pass chunkLimit as well
-      />
+      <div className="tabs">
+        <button
+          className={activeTab === 'bible' ? 'active' : ''}
+          onClick={() => setActiveTab('bible')}
+        >
+          Bible Fetcher
+        </button>
+        <button
+          className={activeTab === 'text' ? 'active' : ''}
+          onClick={() => setActiveTab('text')}
+        >
+          Text Fetcher
+        </button>
+      </div>
+
+      {activeTab === 'bible' && (
+        <div>
+          <VerseInput
+            fetchAndDisplayVerses={fetchAndDisplayVerses}
+            clearInput={clearInput}
+            getVerseChunksCount={getVerseChunksCount}
+          />
+          {loading && <div className="spinner"></div>}
+          {error && <div className="error">{error}</div>}
+          <VerseDisplay
+            verses={verses}
+            handleCopyClick={handleCopyClick}
+            copiedVerses={copiedVerses}
+            chunkLimit={chunkLimit}
+          />
+        </div>
+      )}
+
+      {activeTab === 'text' && (
+        <div>
+          <TextFetcher
+            chunks={chunks}
+            handleFetchChunks={handleFetchChunks}
+            handleCopyClick={handleCopyChunkClick}
+            copiedChunks={copiedChunks}
+          />
+        </div>
+      )}
     </div>
   );
 }

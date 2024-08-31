@@ -119,6 +119,14 @@ button[type="submit"]:hover {
   align-items: center;
 }
 
+.verse-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+
 .copy-button {
   background: #4CAF50;
   color: white;
@@ -153,12 +161,6 @@ button[type="submit"]:hover {
   100% { transform: rotate(360deg); }
 }
 
-.verse-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
-}
 
 .modal-overlay {
   position: fixed;
@@ -218,4 +220,36 @@ button[type="submit"]:hover {
 
 .cancel-button:hover {
   background-color: #999; /* Darker grey on hover */
+}
+
+
+.tabs {
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.tabs button.active {
+  background-color: #0066cc;
+  color: white;
+  border-color: #004999;
+}
+
+button.fetch-button {
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  margin: 5px 0;
+}
+
+button.fetch-button:hover {
+  background-color: #004999;
 }
