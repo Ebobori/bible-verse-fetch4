@@ -1,15 +1,62 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+:root {
+    /* Define root colors for easy theme management */
+    --background-main: #f3fffa;
+    --primary-text: #1A1A40;
+    --secondary-text: #555;
+    --button-background: #ffffff;
+    --button-text: #ffffff;
+    --input-background: #ffffff;
+    --primary-button: #1A1A40;
+    --hover-primary-button: #080815;
+    --secondary-button: #D4AF37;
+    --hover-secondary-button: #c09f31;
+    --input-border: #E0E0E0;
+    --select-border: #e7decc;
+    --select-background: #F4F0E7;
+    --modal-overlay-background: #00000080;
+    --modal-background: #ffffff;
+    --error-color: #d70000;
+    --verse-chunk-background: #ffffff;
+    --verse-chunk-box-shadow: #E0E0E0;
+    --spinner-border:#f3f3f3;
+    --spinner-border-top:#1A1A40;
+}
+
 body {
-  font-family: 'Montserrat', sans-serif;
-  margin: 20px;
-  background-color: #f5f5f5;
-  color: #333;
+    padding-left: 3%;
+    padding-right: 3%;
+    background-color: var(--background-main);
+    color: var(--primary-text);
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+@media screen and (max-width: 576px),
+       screen and (min-width: 577px) and (max-width: 992px),
+       screen and (min-width: 993px) and (max-width: 1119px) {
+    body {
+        padding-left: 3%;
+        padding-right: 3%;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    body {
+        max-width: 1200px;
+    }
 }
 
 h1 {
-  color: #0066cc;
+  color: var(--primary-text);
   margin: 0;
+}
+
+@media screen and (max-width: 576px){
+  h1 {font-size: 1.6rem; margin-bottom: 16px;}
 }
 
 label {
@@ -19,9 +66,9 @@ label {
 
 small {
   display: block;
-  margin-top: 5px;
+  margin-top: 4px;
   font-size: 0.8em;
-  color: #555;
+  color: var(--secondary-text);
   width: 100%;
   white-space: normal;
 }
@@ -30,44 +77,71 @@ form {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 100%;
+  width: auto;
 }
 
 #output {
-  margin-top: 20px;
+  margin-top: 24px;
 }
 
 textarea {
-  width: 100%;
-  margin-bottom: 10px;
+    width: 96%;
+    margin-bottom: 32px;
+    font-family: 'Poppins', sans-serif;
+    border-radius: 10px;
+    padding: 24px;
+    background-color: var(--input-background);
+    border:1px solid var(--input-border);
+}
+
+@media screen and (max-width: 576px)
+{
+  textarea {
+    width: 86%;
+  }
+}
+@media screen and (min-width: 577px) and (max-width: 992px)
+{
+  textarea {
+    width: 93%;
+  }
 }
 
 button {
-  padding: 10px;
+  padding: 16px 24px;
   margin: 5px 0;
+  border-radius: 4px;
+  box-shadow: none;
+  outline-color: none;
+  font-family: Poppins, Arial, sans-serif;
+  font-weight: 600;
+  border: none;
+  background: var(--button-background);
+  box-shadow: 2px 2px 20px 0px var(--input-border);
+  transition: background 0.5s linear;
 }
 
 button[type="submit"] {
-  background-color: #0066cc;
-  color: white;
+  background-color: var(--primary-button);
+  color: var(--button-text);
   border: none;
   cursor: pointer;
 }
 
 button[type="submit"]:hover {
-  background-color: #004999;
+  background-color: var(--hover-primary-button);
 }
 
 .clear-button {
-  background-color: red;
+  background-color:var(--secondary-button);
   color: white;
   border: none;
   cursor: pointer;
-  margin-left: 10px;
+  margin-left: 8px;
 }
 
 .clear-button:hover {
-  background-color: darkred;
+  background-color: var(--hover-secondary-button);
 }
 
 .button-group {
@@ -75,6 +149,7 @@ button[type="submit"]:hover {
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  flex-wrap: wrap;
 }
 
 .header {
@@ -82,73 +157,110 @@ button[type="submit"]:hover {
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  margin-bottom: 24px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+
+}
+@media screen and (max-width: 576px){
+  .header { margin-bottom: 24px;}
 }
 
 .translation-select {
   margin-left: auto;
+  margin-bottom: 24px;
 }
 
 .translation-select select {
-  padding: 10px;
+  padding: 8px;
   font-size: 16px;
-  margin-top: 5px;
+  margin-top: 8px;
+  width: 100%;
+  font-family: Poppins, Arial, sans-serif;
+  border: 1px solid var(--select-border);
+  background: var(--select-background);
+  border-radius: 8px;
+  outline-color: var(--hover-primary-button);
 }
 
 .verse-count {
   padding-left: 20px;
   font-size: 16px;
   align-self: center;
+  margin-top: 16px;
 }
 
 .verse-chunk-container {
-  width: 400px;
-  border: 1px solid #ccc;
-  padding: 10px;
+  width: 31%;
+  border: none;
+  padding: 24px;
   box-sizing: border-box;
   position: relative;
-  background-color: #fff;
-  margin-bottom: 10px;
+  background-color: var(--verse-chunk-background);
+  margin-bottom: 8px;
+  border-radius: 16px;
+  box-shadow: 2px 2px 20px 0px var(--verse-chunk-box-shadow);
 }
 
+
+@media screen and (max-width: 576px),
+       screen and (min-width: 577px) and (max-width: 992px)
+      {
+        .verse-chunk-container {
+          width: 100%;
+        }
+       }
+
+
+ @media screen and (min-width: 577px) and (max-width: 992px) {
+  .verse-chunk-container {
+    width: 47%;
+  }
+ }
+
 .verse-chunk {
-  margin-bottom: 10px;
-  padding-bottom: 20px;
+  margin-bottom: 8px;
+  padding-bottom: 24px;
   text-align: left;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column; /* Stack items vertically */ 
+  align-items: flex-start; /* Align items to the start (left) */
 }
 
 .verse-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 24px;
+  margin-bottom: 10px;
 }
 
-
-.copy-button {
-  background: #4CAF50;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  margin-left: 10px;
-  white-space: nowrap;
+.verse-chunk span {
+  width: 100%; /* Allow the text to take up full width */ 
+ }
+ 
+.copy-button { 
+  align-self: flex-end; /* Position the button to the right */ 
+  background: var(--secondary-button); 
+  color: white; 
+  border: none; 
+  padding: 7px 13px; 
+  cursor: pointer; 
+  margin-bottom: 8px; /* Add space between the button and the text */ 
+  white-space: nowrap; 
 }
 
 .copy-button.copied {
-  background: #0066cc;
+  background: var(--primary-text);
 }
 
 
 .error {
-  color: red;
+  color: rgb(215, 0, 0);
 }
 
 .spinner {
-  border: 16px solid #f3f3f3;
-  border-top: 16px solid #3498db;
+  border: 16px solid var(--spinner-border);
+  border-top: 16px solid var(--spinner-border-top);
   border-radius: 50%;
   width: 120px;
   height: 120px;
@@ -168,7 +280,7 @@ button[type="submit"]:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--modal-overlay-background);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -176,11 +288,17 @@ button[type="submit"]:hover {
 }
 
 .modal-content {
-  background: white;
+  background: var(--modal-background);
   padding: 20px;
   border-radius: 8px;
   max-width: 500px;
   width: 100%;
+}
+
+@media screen and (max-width: 576px){
+.modal-content {
+  width: 80%;
+}
 }
 
 .modal-content h2 {
@@ -188,14 +306,17 @@ button[type="submit"]:hover {
 }
 
 .modal-content button {
-  margin-top: 20px;
+  margin-top: 24px;
 }
 
+.modal-content label {
+  font-weight: 600;
+}
 /* App.css */
 
 /* Save Button */
 .save-button {
-  background-color: #0066cc; /* Blue color */
+  background-color: var(--primary-button); /* Blue color */
   color: white;
   padding: 10px 20px;
   border: none;
@@ -205,13 +326,13 @@ button[type="submit"]:hover {
 }
 
 .save-button:hover {
-  background-color: #004999; /* Darker blue on hover */
+  background-color: var(--hover-primary-button); /* Darker blue on hover */
 }
 
 /* Cancel Button */
 .cancel-button {
-  background-color: #ccc; /* Grey color */
-  color: black;
+  background-color: var(--secondary-button); /* Grey color */
+  color: var(--button-text);
   padding: 10px 20px;
   border: none;
   cursor: pointer;
@@ -219,37 +340,47 @@ button[type="submit"]:hover {
 }
 
 .cancel-button:hover {
-  background-color: #999; /* Darker grey on hover */
+  background-color: var(--hover-secondary-button); /* Darker grey on hover */
 }
 
 
 .tabs {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .tabs button {
-  background-color: #f1f1f1;
-  border: 1px solid #ccc;
-  padding: 10px 20px;
   cursor: pointer;
-  margin-right: 10px;
+  margin-right: 8px;
 }
 
 .tabs button.active {
-  background-color: #0066cc;
-  color: white;
-  border-color: #004999;
+  background-color: var(--primary-button);
+  color: var(--button-text);
+  border-color: none;
 }
 
 button.fetch-button {
-  background-color: #0066cc;
-  color: white;
+  background-color: var(--primary-button);
+  color: var(--button-text);
   border: none;
   cursor: pointer;
-  padding: 10px;
+  padding: 16px 24px;
   margin: 5px 0;
 }
 
 button.fetch-button:hover {
-  background-color: #004999;
+  background-color: var(--hover-primary-button);
+}
+
+
+#chunk-limit {
+  width: 95%;
+  padding: 13px;
+  font-family: Poppins, Arial, sans-serif;
+  border-radius: 8px;
+  border: 1px solid var(--input-border);
+}
+
+.text-fetcher {
+  margin-top: 44px;
 }
